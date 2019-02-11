@@ -6,9 +6,18 @@
 ![qq20151127-1 2x](https://cloud.githubusercontent.com/assets/1472352/11433126/05f8b0e0-94f4-11e5-9fca-74dc9d1b633f.png)
 
 
-[DEMO](http://overtrue.me/share.js/)
+[DEMO](http://overtrue.github.io/share.js/)
 
 或者直接浏览我的博客 http://overtrue.me 或者 http://laravel.so 内容页查看效果。
+
+<p align="center">
+  <br>
+  <b>创造不息，交付不止</b>
+  <br>
+  <a href="https://www.yousails.com">
+    <img src="https://yousails.com/banners/brand.png" width=350>
+  </a>
+</p>
 
 # 安装
 
@@ -25,7 +34,7 @@
     bower install social-share.js
     ```
 
-3. 使用 [cdnjs](https://cdnjs.com/libraries/social-share.js)，引入 `share.min.css` 与 `share.min.js` 两个链接就好。 (感谢 [@mdluo](https://github.com/mdluo))
+3. 使用 [cdnjs](https://cdnjs.com/libraries/social-share.js)，引入 `share.min.css` 与 `social-share.min.js` 两个链接就好。 (感谢 [@mdluo](https://github.com/mdluo))
 
 4. 手动下载或者 git clone 本项目。
 
@@ -38,8 +47,8 @@ HTML:
 <div class="social-share"></div>
 
 <!--  css & js -->
-<link href="dist/css/share.min.css">
-<script src="dist/js/share.min.js"></script>
+<link rel="stylesheet" href="dist/css/share.min.css">
+<script src="dist/js/social-share.min.js"></script>
 
 // 当你使用类名为 `social-share` 时不需要手动初始化
 ```
@@ -55,12 +64,26 @@ HTML:
 url                 : '', // 网址，默认使用 window.location.href
 source              : '', // 来源（QQ空间会用到）, 默认读取head标签：<meta name="site" content="http://overtrue" />
 title               : '', // 标题，默认读取 document.title 或者 <meta name="title" content="share.js" />
-description         : '', // 描述, 默认读取head标签：<meta name="description" content="PHP弱类型的实现原理分析" />
+origin              : '', // 分享 @ 相关 twitter 账号
+description         : '', // 描述, 默认读取head标签：<meta name="description" content="PHP弱类型的实现原理分析" />
 image               : '', // 图片, 默认取网页中第一个img标签
 sites               : ['qzone', 'qq', 'weibo','wechat', 'douban'], // 启用的站点
 disabled            : ['google', 'facebook', 'twitter'], // 禁用的站点
 wechatQrcodeTitle   : '微信扫一扫：分享', // 微信二维码提示文字
 wechatQrcodeHelper  : '<p>微信里点“发现”，扫一下</p><p>二维码便可将本文分享至朋友圈。</p>'
+```
+
+示例代码：
+
+```js
+var $config = {
+    title               : '234',
+    description         : '123',
+    wechatQrcodeTitle   : "微信扫一扫：分享", // 微信二维码提示文字
+    wechatQrcodeHelper  : '<p>微信里点“发现”，扫一下</p><p>二维码便可将本文分享至朋友圈。</p>',
+};
+
+socialShare('.social-share-cs', $config);
 ```
 
 以上选项均可通过标签 `data-xxx` 来设置：
@@ -123,6 +146,42 @@ wechatQrcodeHelper  : '<p>微信里点“发现”，扫一下</p><p>二维码�
 当在手机上打开该页面的时候就只会显示这4个图标了。
 
 欢迎贡献代码及提建议！
+
+## Requirejs
+本插件支持使用Requirejs加载，Jquery版本参考如下：
+```js
+requirejs.config({
+  paths: {
+    jquery: '//cdn.bootcss.com/jquery/2.2.4/jquery.min',
+    share: '//cdn.bootcss.com/social-share.js/1.0.15/js/jquery.share.min'
+  },
+  shim: {
+    share:['jquery']
+  }
+})
+
+requirejs(['jquery','share'],function ($){
+  $('.target').share({
+    // settings
+  })
+})
+```
+
+无依赖版本直接加载即可，使用参考如下：
+```js
+requirejs.config({
+  paths: {
+    share: '//cdn.bootcss.com/social-share.js/1.0.15/js/social-share.min'
+  },
+})
+
+requirejs(['share'],function (){
+//   ele:指定初始化的元素，可以是单个元素也可以是元素数组
+  window.socialShare(ele,{
+    // settings
+  })
+})
+```
 
 # 引用
 

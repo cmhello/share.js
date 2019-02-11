@@ -46,7 +46,7 @@
         wechatQrcodeHelper: '<p>微信里点“发现”，扫一下</p><p>二维码便可将本文分享至朋友圈。</p>',
         wechatQrcodeSize: 100,
 
-        sites: ['weibo', 'qq', 'wechat', 'tencent', 'douban', 'qzone', 'linkedin', 'diandian', 'facebook', 'twitter', 'google'],
+        sites: ['weibo', 'qq', 'wechat', 'douban', 'qzone', 'linkedin', 'facebook', 'twitter', 'google'],
         mobileSites: [],
         disabled: [],
         initialized: false
@@ -54,12 +54,10 @@
 
     var templates = {
         qzone: 'http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url={{URL}}&title={{TITLE}}&desc={{DESCRIPTION}}&summary={{SUMMARY}}&site={{SOURCE}}',
-        qq: 'http://connect.qq.com/widget/shareqq/index.html?url={{URL}}&title={{TITLE}}&source={{SOURCE}}&desc={{DESCRIPTION}}&pics={{IMAGE}}',
-        tencent: 'http://share.v.t.qq.com/index.php?c=share&a=index&title={{TITLE}}&url={{URL}}&pic={{IMAGE}}',
-        weibo: 'http://service.weibo.com/share/share.php?url={{URL}}&title={{TITLE}}&pic={{IMAGE}}&appkey={{WEIBOKEY}}',
+        qq: 'http://connect.qq.com/widget/shareqq/index.html?url={{URL}}&title={{TITLE}}&source={{SOURCE}}&desc={{DESCRIPTION}}&pics={{IMAGE}}&summary="{{SUMMARY}}"',
+        weibo: 'https://service.weibo.com/share/share.php?url={{URL}}&title={{TITLE}}&pic={{IMAGE}}&appkey={{WEIBOKEY}}',
         wechat: 'javascript:',
         douban: 'http://shuo.douban.com/!service/share?href={{URL}}&name={{TITLE}}&text={{DESCRIPTION}}&image={{IMAGE}}&starid=0&aid=0&style=11',
-        diandian: 'http://www.diandian.com/share?lo={{URL}}&ti={{TITLE}}&type=link',
         linkedin: 'http://www.linkedin.com/shareArticle?mini=true&ro=true&title={{TITLE}}&url={{URL}}&summary={{SUMMARY}}&source={{SOURCE}}&armin=armin',
         facebook: 'https://www.facebook.com/sharer/sharer.php?u={{URL}}',
         twitter: 'https://twitter.com/intent/tweet?text={{TITLE}}&url={{URL}}&via={{ORIGIN}}',
@@ -129,7 +127,7 @@
 
         each(isPrepend ? sites.reverse() : sites, function (name) {
             var url = makeUrl(name, data);
-            var link = data.initialized ? getElementsByClassName(elem, '.icon-' + name) : createElementByString('<a class="social-share-icon icon-' + name + '"></a>');
+            var link = data.initialized ? getElementsByClassName(elem, 'icon-' + name) : createElementByString('<a class="social-share-icon icon-' + name + '"></a>');
 
             if (!link.length) {
                 return true;
@@ -166,8 +164,8 @@
         var elems = createElementByString('<div class="wechat-qrcode"><h4>' + data.wechatQrcodeTitle + '</h4><div class="qrcode"></div><div class="help">' + data.wechatQrcodeHelper + '</div></div>');
         var qrcode = getElementsByClassName(elems[0], 'qrcode', 'div');
 
-        wechat[0].appendChild(elems[0]);
         new QRCode(qrcode[0], {text: data.url, width: data.wechatQrcodeSize, height: data.wechatQrcodeSize});
+        wechat[0].appendChild(elems[0]);
     }
 
 
@@ -215,7 +213,10 @@
      * @returns {String}
      */
     function makeUrl(name, data) {
-        data['summary'] = data['description'];
+
+        if (! data['summary']){
+            data['summary'] = data['description'];
+        }
 
         return templates[name].replace(/\{\{(\w)(\w*)\}\}/g, function (m, fix, key) {
             var nameKey = name + fix + key.toLowerCase();
@@ -379,7 +380,7 @@
      */
     function dataset(elem) {
         if (elem.dataset) {
-            return elem.dataset;
+            return JSON.parse(JSON.stringify(elem.dataset));
         }
 
         var target = {};
